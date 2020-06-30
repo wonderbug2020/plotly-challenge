@@ -42,13 +42,14 @@ function barChart(selectValue){
   var filterBar = data.samples.filter(value => value.id == selectValue);
   var sampleValues = filterBar.map(value => value.sample_values);
   var otuId = filterBar.map(value => value.otu_ids);
+  var otuIdText = otuId.map(otuId => 'OTD ' + otuId);
   var otuLabels = filterBar.map(value => value.otu_labels);
 
+  console.log(otuIdText)
+
   var trace = {
-    // x:sampleValues[0].slice(0,10),
-    // y:otuId[0].slice(0,10),
-    x:sampleValues[0].slice(0,10),
-    //y:sampleValues[0].slice(0,10),
+    x:sampleValues[0].slice(0,10).reverse(),
+    y:otuIdText.slice(0,10),
     //text:otuLabels[0].slice(0,10),
     type: "bar",
     orientations: "h"
@@ -68,9 +69,6 @@ function barChart(selectValue){
 
   Plotly.newPlot("bar",barData,layout);
 
-
-
-  // console.log(otuId)
 }
 
 function bubbleChart(selectValue){
