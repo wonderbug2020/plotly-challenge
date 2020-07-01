@@ -42,37 +42,46 @@ function barChart(selectValue){
   var filterBar = data.samples.filter(value => value.id == selectValue);
   var sampleValues = filterBar.map(value => value.sample_values);
   var otuId = filterBar.map(value => value.otu_ids);
-  var otuIdText = otuId.map(otuId => 'OTD ' + otuId);
+  var otuIdText = otuId[0].map(value => 'OTD ' + value);
   var otuLabels = filterBar.map(value => value.otu_labels);
-
-  console.log(otuIdText)
-
   var trace = {
     x:sampleValues[0].slice(0,10).reverse(),
-    y:otuIdText.slice(0,10),
-    //text:otuLabels[0].slice(0,10),
+    y:otuIdText.slice(0,10).reverse(),
+    text:otuLabels[0].slice(0,10).reverse(),
     type: "bar",
-    orientations: "h"
+    orientation: "h"
   }
-
   var layout = {
     xaxis: {
       autorange: "ascending"
     },
-
     yaxis: {
       side: "left"
     }
   }
-
   var barData = [trace]
-
   Plotly.newPlot("bar",barData,layout);
-
 }
 
 function bubbleChart(selectValue){
+  var filterBar = data.samples.filter(value => value.id == selectValue);
+  var sampleValues = filterBar.map(value => value.sample_values);
+  var otuId = filterBar.map(value => value.otu_ids);
+  var otuLabels = filterBar.map(value => value.otu_labels);
+  var trace = {
+    x:otuId[0],
+    y:sampleValues[0],
+    text:otuLabels[0],
+    mode: 'markers',
+    marker: {
+      size: sampleValues[0],
+      colorscale: 'Earth',
+      color: otuId[0]
+      }
+  }
 
+  var bubbleData = [trace]
+  Plotly.newPlot("bubble",bubbleData)
 }
 
 function gaugeChart(selectValue){
