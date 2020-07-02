@@ -24,7 +24,6 @@ function updatePlotly() {
     panelUpdate(selectValue);
     barChart(selectValue);
     bubbleChart(selectValue);
-    gaugeChart(selectValue);
 }
 function panelUpdate(selectValue) {
   var filterData = data.metadata.filter(value => value.id == selectValue);
@@ -36,6 +35,7 @@ function panelUpdate(selectValue) {
   panel.append("p").text(`age: ${filterData[0].age}`);
   panel.append("p").text(`location: ${filterData[0].location}`);
   panel.append("p").text(`bbtype: ${filterData[0].bbtype}`);
+  panel.append("p").text(`wfreq: ${filterData[0].wfreq}`);
 }
 
 function barChart(selectValue){
@@ -82,10 +82,6 @@ function bubbleChart(selectValue){
 
   var bubbleData = [trace]
   Plotly.newPlot("bubble",bubbleData)
-}
-
-function gaugeChart(selectValue){
-
 }
 
 init();
