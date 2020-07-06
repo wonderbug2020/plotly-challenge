@@ -24,6 +24,7 @@ function updatePlotly() {
     panelUpdate(selectValue);
     barChart(selectValue);
     bubbleChart(selectValue);
+    gaugeChart(selectValue);
 }
 function panelUpdate(selectValue) {
   var filterData = data.metadata.filter(value => value.id == selectValue);
@@ -52,12 +53,14 @@ function barChart(selectValue){
     orientation: "h"
   }
   var layout = {
-    xaxis: {
-      autorange: "ascending"
+    width: 400,
+    height: 450,
+    margin: {
+      t: 0,
+      b: 15,
+      l: 200,
+      r: 30,
     },
-    yaxis: {
-      side: "left"
-    }
   }
   var barData = [trace]
   Plotly.newPlot("bar",barData,layout);
@@ -83,5 +86,92 @@ function bubbleChart(selectValue){
   var bubbleData = [trace]
   Plotly.newPlot("bubble",bubbleData)
 }
+
+function gaugeChart(selectValue) {
+  var filterData = data.metadata.filter(value => value.id == selectValue);
+  var wfreq = filterData[0].wfreq;
+  var gaugeTrace = {
+      type: 'pie',
+      showlegend: false,
+      hole: 0.5,
+      rotation: 90,
+      values: [81/9, 81/9, 81/9, 81/9, 81/9, 81/9, 81/9, 81/9, 81/9, 81],
+      text: ['0-1','1-2','2-3','3-4','4-5','5-6','6-7','7-8','8-9'],
+      direction: 'clockwise',
+      textinfo: 'text',
+      textposition: 'inside',
+      marker: {
+          colors: ['#F8F3EC','#F4F1E5','#E9E6CA','#E2E4B1','#D5E49D','#B7CC92','#8CBF88','#8ABB8F','#85B48A','white'],
+          labels: ['0-1','1-2','2-3','3-4','4-5','5-6','6-7','7-8','8-9',''],
+          hoverinfo: "label"
+        },
+        hoverinfo: "skip"
+      }
+      var dot = {
+          type: 'scatter',
+          x: [0],
+          y: [0],
+          marker: {
+            size: 14,
+            color:'39ff14'
+          },
+          showlegend: false,
+          hoverinfo: "skip",
+          line: {
+            color: '080808'
+          }
+      }
+      var degrees = 180-(20 * wfreq);
+      var radius = .4;
+      var radians = degrees * Math.PI / 180;
+      var aX = 0.025 * Math.cos((radians) * Math.PI / 180);
+      var aY = 0.025 * Math.sin((radians) * Math.PI / 180);
+      var bX = -0.025 * Math.cos((radians) * Math.PI / 180);
+      var bY = -0.025 * Math.sin((radians) * Math.PI / 180);
+      var cX = radius * Math.cos(radians);
+      var cY = radius * Math.sin(radians);
+      var    aXpath = String(aX);
+      var    aYpath = String(aY);
+      var    bXpath = String(bX);
+      var    bYpath = String(bY);
+      var    cXpath = String(cX);
+      var    cYpath = String(cY);
+      var path = 'M ' + aXpath + ' ' + aYpath + ' L ' +
+                        bXpath + ' ' + bYpath + ' L ' +
+                        cXpath + ' ' + cYpath + ' Z';
+          //console.log(path);
+      var gaugeLayout = {
+          title: "<b>Belly Button Washing Frequency</b><br>Scrubs per Week",
+          width: 600,
+          height: 500,
+          margin: {
+            t: 100,
+            b: 0,
+            l: 0,
+            r: 0,
+          },
+          shapes:[{
+              type: 'path',
+              path: path,
+              fillcolor: '39ff14',
+              line: {
+                color: '080808'
+              }
+            }],
+          xaxis: {zeroline:false,
+                  showticklabels:false,
+                  showgrid: false,
+                  range: [-1, 1],
+                  fixedrange: true
+                },
+          yaxis: {zeroline:false,
+                  showticklabels:false,
+                  showgrid: false,
+                  range: [-1, 1],
+                  fixedrange: true
+                }
+        };
+        Plotly.newPlot("gauge", [gaugeTrace, dot], gaugeLayout);
+  }
 
 init();
